@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Update
+URL="https://github.com/RossComputerGuy/stardustos"
+sources=($(grep -r "${URL}" @PROJECT_SOURCE_DIR@/docs | cut -d ':' -f1))
+sources=($(printf "%s\n" "${sources[@]}" | sort -u))
+srcsources=($(find @PROJECT_SOURCE_DIR@ -type 'f' -name '*.c' -not -path '@PROJECT_BINARY_DIR@/*'))
+function finish {
+	rm -rf cscope.out
+}
+trap finish EXIT
+for src in ${sources[@]}; do
+	funcs=($(grep "$URL" $src | awk -F'[][]' '{print $2}'))
+	for fn in ${funcs[@]}; do
+		line=$(cscope -L1"${fn}" ${srcsources[@]} | cut -f3 -d ' ')
+		srcsrc=$(cscope -L1"${fn}" ${srcsources[@]} | cut -f1 -d ' ' | sed "s|@PROJECT_SOURCE_DIR@|$(basename @PROJECT_SOURCE_DIR@)|g")
+		ln=$(grep "\[$fn\]\: $URL" "$src" --line-number | grep "$URL" | cut -f1 -d ':')
+		url=$(grep "\[$fn\]\: $URL" "$src" | cut -f2 -d ' ')
+		sed -i "${ln}s|$url|${URL}/blob/master/$srcsrc#L${line}|g" $src
+	done
+done
+
+# Merge
+sources=(@PROJECT_SOURCE_DIR@/docs/README.md @PROJECT_SOURCE_DIR@/docs/building.md $(find @PROJECT_SOURCE_DIR@/docs -name "*.md" -not -name "README.md" -not -name "building.md"))
+cat ${sources[@]} > "@PROJECT_BINARY_DIR@/manual.md"

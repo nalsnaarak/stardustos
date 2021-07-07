@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+if ! [ -d @PACKAGE_BINARY_DIR@/build ]; then
+	ln -s @PACKAGE_SOURCE_DIR@/src @PACKAGE_BINARY_DIR@/build
+	cd @PACKAGE_BINARY_DIR@/build
+	git checkout v@PACKAGE_VERSION@
+fi
+cp @PACKAGE_SOURCE_DIR@/config @PACKAGE_BINARY_DIR@/build/.config
+cd @PACKAGE_BINARY_DIR@/build
+source @PROJECT_BINARY_DIR@/toolchain.sh
+make vmlinux
+make INSTALL_HDR_PATH=@BUILDFS@/usr headers_install
+mkdir -p @ROOTFS@/boot
+cp vmlinux @ROOTFS@/boot/vmlinuz

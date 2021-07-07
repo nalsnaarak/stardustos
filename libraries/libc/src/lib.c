@@ -10,18 +10,20 @@ const FILE __libc_stdin = { .fd = 0, .impl = NULL, .mode = "r", .offset = 0, .wr
 const FILE __libc_stdout = { .fd = 1, .impl = NULL, .mode = "w", .offset = 0, .write = __file_write, .read = __file_read };
 const FILE __libc_stderr = { .fd = 2, .impl = NULL, .mode = "w", .offset = 0, .write = __file_write, .read = __file_read };
 
+int errno = 0;
+
 #ifndef NEWLAND_KERNEL
 extern void _init();
 extern void _fini();
 
 void __libc_init() {
-  // TODO: open stdin, stdout, and stderr
-  _init();
+	// TODO: open stdin, stdout, and stderr
+	_init();
 }
 
 void __libc_fini(int code) {
-  _fini();
-  // TODO: close stdin, stdout, and stderr
-  while (1);
+	_fini();
+	// TODO: close stdin, stdout, and stderr
+	while (1);
 }
 #endif

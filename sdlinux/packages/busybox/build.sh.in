@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+if ! [ -d @PACKAGE_BINARY_DIR@/build ]; then
+	ln -s @PACKAGE_SOURCE_DIR@/src @PACKAGE_BINARY_DIR@/build
+	cd @PACKAGE_BINARY_DIR@/build
+	git checkout v1_31_1
+fi
+cp @PACKAGE_BINARY_DIR@/config @PACKAGE_BINARY_DIR@/build/.config
+cd @PACKAGE_BINARY_DIR@/build
+export PATH=$PATH:@BUILDFS@/usr/bin
+export CC=musl-gcc
+export LD=musl-gcc
+make
+make install
+rm -rf @INITRD@/usr @INITRD@/sbin

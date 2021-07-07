@@ -1,0 +1,24 @@
+[submodule "tools/nvk/deps/unicorn"]
+	path = tools/nvk/deps/unicorn
+	url = https://github.com/unicorn-engine/unicorn
+[submodule "sdlinux/packages/linux/src"]
+	path = sdlinux/packages/linux/src
+	url = https://github.com/torvalds/linux
+[submodule "sdlinux/packages/musl/src"]
+	path = sdlinux/packages/musl/src
+	url = git://git.musl-libc.org/musl
+[submodule "sdlinux/packages/busybox/src"]
+	path = sdlinux/packages/busybox/src
+	url = git://busybox.net/busybox.git
+[submodule "toolchain/binutils"]
+	path = toolchain/binutils
+	url = git://sourceware.org/git/binutils-gdb.git
+[submodule "toolchain/gcc"]
+	path = toolchain/gcc
+	url = git://gcc.gnu.org/git/gcc.git
+[submodule "newland/deps/liballoc"]
+	path = newland/deps/liballoc
+	url = https://github.com/blanham/liballoc/
+[submodule "toolchain/glibc"]
+	path = toolchain/glibc
+	url = git://sourceware.org/git/glibc.git

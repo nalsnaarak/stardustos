@@ -1,0 +1,19 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download submodules
+      run: git submodule update --init --recursive
+    - name: Fix UID for Docker build user
+      run: ./scripts/docker-fix.sh
+    - name: Initialize Docker Container
+      run: ./scripts/docker-init.sh
+    - name: Build Docker Container
+      run: ./scripts/docker-run.sh

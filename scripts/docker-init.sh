@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-docker build -t stardustos $(readlink -f "$(dirname $(dirname $0))")
+p=$(dirname "$0")
+p=$(dirname "$p")
+p=$(readlink -f "$p")
+docker build -t stardustos "$p" "$@"

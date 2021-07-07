@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+if ! [ -d @PACKAGE_BINARY_DIR@/build ]; then
+	ln -s @PACKAGE_SOURCE_DIR@/src @PACKAGE_BINARY_DIR@/build
+	cd @PACKAGE_BINARY_DIR@/build
+	git checkout v@PACKAGE_VERSION@
+fi
+cd @PACKAGE_BINARY_DIR@/build
+source @PROJECT_BINARY_DIR@/toolchain.sh
+target=@ARCH@
+if [ @ARCH@ == "x86" ]; then
+	target="i386"
+fi
+./configure --prefix=/usr --libdir=/lib --target=$target
+make
+sed -i "s|/lib/|@BUILDFS@/lib/|" obj/musl-gcc
+cp @PACKAGE_BINARY_DIR@/musl-gcc.specs lib/musl-gcc.specs
+make install DESTDIR=@BUILDFS@
+make install-libs DESTDIR=@INITRD@
+rm @INITRD@/lib/musl-gcc.specs -rf
